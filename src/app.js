@@ -5,6 +5,8 @@ import { HomeView } from './views/HomeView.js';
 import { TermView } from './views/TermView.js';
 import { NotFoundView } from './views/NotFoundView.js';
 
+const APP_VERSION = '1.0.1-debug';
+
 class App {
   constructor() {
     this.store = new Store();
@@ -13,6 +15,10 @@ class App {
   }
 
   async init() {
+    console.log(`[App] Boltonisms v${APP_VERSION} initializing...`);
+    console.log('[App] Current URL:', window.location.href);
+    console.log('[App] Current hash:', window.location.hash);
+
     try {
       this.showLoading();
 
@@ -38,6 +44,7 @@ class App {
   }
 
   initRouter() {
+    console.log('[App] Initializing router...');
     const homeView = new HomeView(this.store);
     const termView = new TermView(this.store);
     const notFoundView = new NotFoundView();
@@ -47,6 +54,8 @@ class App {
       { path: '/t/:slug', view: termView },
       { path: '*', view: notFoundView }
     ]);
+    console.log('[App] Router initialized, triggering initial route');
+    this.router.handleRoute();
   }
 
   showLoading() {
