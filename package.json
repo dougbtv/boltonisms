@@ -1,0 +1,23 @@
+{
+  "name": "boltonisms",
+  "version": "1.0.0",
+  "description": "A dictionary of insider ski/trail terms from The Old Goats / Friends of Bolton",
+  "type": "module",
+  "scripts": {
+    "pull": "node tools/pull-sheet.mjs",
+    "validate": "node tools/validate.mjs",
+    "build": "node tools/build.mjs",
+    "dev": "node tools/dev-serve.mjs"
+  },
+  "keywords": ["dictionary", "ski", "bolton", "slang"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "googleapis": "^144.0.0",
+    "glob": "^10.3.10"
+  },
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://boltonisms.org/schemas/entry.json",
+  "title": "Boltonism Entry",
+  "description": "A single term entry in the Boltonisms dictionary",
+  "type": "object",
+  "required": ["id", "term", "slug", "type", "definitions"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier (UUID or hash)"
+    },
+    "term": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The headword term as entered"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "URL-safe slug (lowercase, hyphens)"
+    },
+    "type": {
+      "type": "string",
+      "description": "Part of speech or term type"
+    },
+    "definitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Array of definitions (compiled from Definition 1/2/3)"
+    },
+    "otherForms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Other forms of the term"
+    },
+    "history": {
+      "type": "string",
+      "description": "Historical context or etymology"
+    },
+    "seeAlso": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Related terms"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Example usage sentences"
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "alt": {
+          "type": "string"
+        }
+      }
+    },
+    "attribution": {
+      "type": "string",
+      "description": "Who coined or popularized this term"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp"
+    },
+    "sourceRow": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Original row number in the sheet"
+    }
+  }
+}
