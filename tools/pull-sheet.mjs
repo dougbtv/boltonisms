@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { google } from 'googleapis';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { createHash } from 'crypto';
 
 const SHEET_ID = process.env.SHEET_ID || '1x5WcMlprvYs3IHSbhI2rzt9xEZxAgi6w97Pu7UdHISI';
@@ -176,6 +176,11 @@ async function pullSheet() {
 
 async function writeOutputs(data) {
   const { entries, etag } = data;
+
+  // Ensure output directory exists
+  if (!existsSync(OUTPUT_DIR)) {
+    mkdirSync(OUTPUT_DIR, { recursive: true });
+  }
 
   writeFileSync(
     `${OUTPUT_DIR}/boltonisms.json`,

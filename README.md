@@ -54,6 +54,7 @@ Visit http://localhost:3000 to view the site.
 - `npm run validate` - Validate data against schema
 - `npm run build` - Full build (pull → validate → copy assets)
 - `npm run dev` - Start local dev server
+- `npm run deploy` - Deploy to production server
 
 ## Project Structure
 
@@ -96,13 +97,53 @@ The source sheet should have these columns:
 
 ## Deployment
 
-The `dist/` folder contains a fully static site that can be deployed to:
+### Production Server (birdnetpi.local)
+
+Deploy to production with a single command:
+
+```bash
+npm run deploy
+```
+
+This will:
+1. Sync code to `doug@birdnetpi.local:/home/doug/boltonisms`
+2. Copy credentials file securely
+3. Install dependencies on remote
+4. Run initial build
+5. Set up systemd services:
+   - `boltonisms.service` - Web server (runs on port 3000)
+   - `boltonisms-build.timer` - Automatic hourly data updates
+
+**Post-deployment:**
+- Site runs at: http://birdnetpi.local:3000
+- Data auto-updates every hour
+- Service auto-restarts on reboot
+
+**Useful commands:**
+```bash
+# Check service status
+ssh doug@birdnetpi.local 'sudo systemctl status boltonisms'
+
+# View logs
+ssh doug@birdnetpi.local 'sudo journalctl -u boltonisms -f'
+
+# Check build timer
+ssh doug@birdnetpi.local 'sudo systemctl status boltonisms-build.timer'
+
+# Manual rebuild
+ssh doug@birdnetpi.local 'cd /home/doug/boltonisms && npm run build'
+
+# Restart service
+ssh doug@birdnetpi.local 'sudo systemctl restart boltonisms'
+```
+
+### Alternative Hosting
+
+The `dist/` folder can also be deployed to:
 - Netlify
 - Vercel
 - GitHub Pages
 - Any static hosting service
-
-Set up a cron job or GitHub Action to run `npm run build` periodically to keep the site updated with new sheet data.
 
 ## License
 

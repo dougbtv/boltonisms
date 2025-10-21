@@ -3,6 +3,8 @@ import { Router } from './router.js';
 import { SearchBox } from './components/SearchBox.js';
 import { HomeView } from './views/HomeView.js';
 import { TermView } from './views/TermView.js';
+import { AboutView } from './views/AboutView.js';
+import { ContributeView } from './views/ContributeView.js';
 import { NotFoundView } from './views/NotFoundView.js';
 
 const APP_VERSION = '1.0.1-debug';
@@ -47,11 +49,15 @@ class App {
     console.log('[App] Initializing router...');
     const homeView = new HomeView(this.store);
     const termView = new TermView(this.store);
+    const aboutView = new AboutView();
+    const contributeView = new ContributeView();
     const notFoundView = new NotFoundView();
 
     this.router = new Router([
       { path: '/', view: homeView },
       { path: '/t/:slug', view: termView },
+      { path: '/about', view: aboutView },
+      { path: '/contribute', view: contributeView },
       { path: '*', view: notFoundView }
     ]);
     console.log('[App] Router initialized, triggering initial route');

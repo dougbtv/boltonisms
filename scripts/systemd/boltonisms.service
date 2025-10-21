@@ -1,0 +1,21 @@
+[Unit]
+Description=Boltonisms Dictionary Web Server
+After=network.target
+
+[Service]
+Type=simple
+User=doug
+WorkingDirectory=/home/doug/boltonisms
+Environment=NODE_ENV=production
+Environment=PORT=3000
+ExecStart=/usr/bin/npm run dev
+Restart=always
+RestartSec=10
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=boltonisms
+
+[Install]
+WantedBy=multi-user.target

@@ -145,6 +145,14 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.header-logo {
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto 1rem;
+  display: block;
+}
+
 .tagline {
   font-size: 1.125rem;
   color: var(--color-text-muted);
@@ -475,6 +483,122 @@ body {
 
 .btn:hover {
   background: var(--color-secondary);
+}
+
+.site-footer {
+  margin-top: 4rem;
+  padding: 2rem 0;
+  border-top: 2px solid var(--color-border);
+  text-align: center;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-nav a {
+  color: var(--color-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.footer-nav a:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.page-content {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: 2.5rem;
+  color: var(--color-primary);
+}
+
+.about-section,
+.contribute-section {
+  margin-bottom: 2rem;
+}
+
+.about-section h2,
+.contribute-section h2 {
+  font-size: 1.5rem;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.about-section p,
+.contribute-section p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.contribute-steps {
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.contribute-steps li {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.spreadsheet-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-secondary);
+  color: white;
+  text-decoration: none;
+  border-radius: var(--border-radius);
+  transition: background 0.2s;
+}
+
+.spreadsheet-link:hover {
+  background: var(--color-primary);
+}
+
+.field-guide {
+  background: var(--color-bg-alt);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  margin: 1rem 0;
+}
+
+.field-item {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.field-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.field-item strong {
+  color: var(--color-primary);
+}
+
+.guidelines-list {
+  padding-left: 1.5rem;
+  margin: 1rem 0;
+}
+
+.guidelines-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.8;
 }
 
 @media (max-width: 768px) {

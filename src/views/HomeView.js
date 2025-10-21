@@ -14,8 +14,8 @@ export class HomeView {
     return `
       <div class="home-view">
         <header class="home-header">
-          <h1>Boltonisms</h1>
-          <p class="tagline">A dictionary of insider ski/trail terms from The Old Goats</p>
+          <img src="/header.png" alt="Boltonisms" class="header-logo" />
+          <p class="tagline">The Goats Dictionary.</p>
         </header>
 
         <div class="random-term-section">
@@ -39,6 +39,13 @@ export class HomeView {
             ${this.renderAllTerms(index)}
           </div>
         </section>
+
+        <footer class="site-footer">
+          <nav class="footer-nav">
+            <a href="#/about">About</a>
+            <a href="#/contribute">Contribute</a>
+          </nav>
+        </footer>
       </div>
     `;
   }

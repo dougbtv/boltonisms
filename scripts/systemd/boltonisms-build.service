@@ -1,0 +1,14 @@
+[Unit]
+Description=Boltonisms Data Rebuild
+After=network.target
+
+[Service]
+Type=oneshot
+User=doug
+WorkingDirectory=/home/doug/boltonisms
+ExecStart=/usr/bin/npm run build
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=boltonisms-build
