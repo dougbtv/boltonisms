@@ -15,7 +15,7 @@ export class HomeView {
       <div class="home-view">
         <header class="home-header">
           <img src="/header.png" alt="Boltonisms" class="header-logo" />
-          <p class="tagline">The Goats Dictionary.</p>
+          <p class="tagline">The Bolton Dirt Bag Dictionary.</p>
         </header>
 
         <div class="random-term-section">
