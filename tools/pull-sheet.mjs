@@ -109,6 +109,97 @@ function normalizeRow(row, rowIndex, seenSlugs) {
   return entry;
 }
 
+async function extractCellImages(sheets, spreadsheetId) {
+  console.log('🖼️  Checking for in-cell images...');
+
+  try {
+    // Get full spreadsheet data including images
+    const metadata = await sheets.spreadsheets.get({
+      spreadsheetId,
+      includeGridData: true
+    });
+
+    const imageMap = {}; // Map of row numbers to image URLs
+
+    // Look for images in the first sheet
+    const sheet = metadata.data.sheets[0];
+    if (!sheet) {
+      console.log('  No sheet data available');
+      return imageMap;
+    }
+
+    console.log(`  Sheet: "${sheet.properties.title}"`);
+
+    // Check for images in rowData
+    if (sheet.data && sheet.data[0] && sheet.data[0].rowData) {
+      const rowData = sheet.data[0].rowData;
+
+      rowData.forEach((row, rowIndex) => {
+        if (!row.values || rowIndex === 0) return; // Skip header row
+
+        const imageCell = row.values[9]; // Column J (Image column, 0-indexed)
+
+
+        // Check various ways an image URL might be stored
+        if (imageCell) {
+          let imageUrl = null;
+
+          // Check userEnteredValue
+          if (imageCell.userEnteredValue) {
+            if (imageCell.userEnteredValue.stringValue) {
+              imageUrl = imageCell.userEnteredValue.stringValue;
+            } else if (imageCell.userEnteredValue.formulaValue) {
+              // Could be =IMAGE("url") formula
+              const match = imageCell.userEnteredValue.formulaValue.match(/IMAGE\("([^"]+)"\)/i);
+              if (match) {
+                imageUrl = match[1];
+              }
+            }
+          }
+
+          // Check effectiveValue
+          if (!imageUrl && imageCell.effectiveValue && imageCell.effectiveValue.stringValue) {
+            imageUrl = imageCell.effectiveValue.stringValue;
+          }
+
+          // Check hyperlink
+          if (!imageUrl && imageCell.hyperlink) {
+            imageUrl = imageCell.hyperlink;
+          }
+
+          if (imageUrl && (imageUrl.match(/\.(jpg|jpeg|png|gif|webp)$/i) || imageUrl.startsWith('http'))) {
+            imageMap[rowIndex + 1] = imageUrl;
+            console.log(`  Found image in row ${rowIndex + 1}: ${imageUrl.substring(0, 60)}...`);
+          }
+        }
+      });
+    }
+
+    // Check for overlaid images (these are positioned over cells)
+    // Note: These don't map cleanly to rows, so we'll skip for now
+    // but log if we find any
+    if (sheet.merges || sheet.conditionalFormats || sheet.filterViews) {
+      console.log('  Note: Sheet has additional formatting/overlays');
+    }
+
+    const imageCount = Object.keys(imageMap).length;
+    console.log(`  Found ${imageCount} image(s)`);
+
+    if (imageCount === 0) {
+      console.log('\n  💡 TIP: To add images to the dictionary:');
+      console.log('     1. Use the =IMAGE("https://...") formula in the Image column, OR');
+      console.log('     2. Paste an image URL as plain text in the Image column');
+      console.log('     Note: Images inserted via "Insert > Image" are not accessible via API\n');
+    }
+
+    return imageMap;
+  } catch (error) {
+    console.warn('  Warning: Could not extract cell images:', error.message);
+    console.warn('  Stack:', error.stack);
+    return {};
+  }
+}
+
 async function pullSheet() {
   console.log('🔍 Loading credentials...');
 
@@ -120,13 +211,17 @@ async function pullSheet() {
 
   const auth = new google.auth.GoogleAuth({
     credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+    scopes: [
+      'https://www.googleapis.com/auth/spreadsheets.readonly',
+      'https://www.googleapis.com/auth/drive.readonly'
+    ],
   });
 
   const sheets = google.sheets({ version: 'v4', auth });
 
   console.log(`📊 Fetching sheet: ${SHEET_ID}...`);
 
+  // First, get the cell values
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
     range: 'A:K',
@@ -138,6 +233,9 @@ async function pullSheet() {
   }
 
   console.log(`✓ Fetched ${rows.length} rows`);
+
+  // Try to extract in-cell images
+  const imageMap = await extractCellImages(sheets, SHEET_ID);
 
   const header = rows[0];
   const dataRows = rows.slice(1);
@@ -155,6 +253,12 @@ async function pullSheet() {
       if (row.length === 0 || !row[0]?.trim()) {
         return;
       }
+
+      // If there's an image in the imageMap for this row, add it to the row data
+      if (imageMap[rowIndex]) {
+        row[9] = imageMap[rowIndex]; // Set column J (Image) to the extracted image URL
+      }
+
       const entry = normalizeRow(row, rowIndex, seenSlugs);
       entries.push(entry);
     } catch (err) {

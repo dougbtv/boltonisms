@@ -48,6 +48,22 @@ export class AboutView {
               Check out the <a href="#/contribute">Contribute</a> page!
             </p>
           </section>
+
+          <section class="about-section">
+            <h2>Open Source</h2>
+            <p>
+              This project is open source and available on GitHub. Feel free to
+              check out the code, report issues, or contribute improvements!
+            </p>
+            <p>
+              <a href="https://github.com/dougbtv/boltonisms"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="spreadsheet-link">
+                View on GitHub →
+              </a>
+            </p>
+          </section>
         </article>
       </div>
     `;

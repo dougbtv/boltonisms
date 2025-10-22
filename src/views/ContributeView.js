@@ -71,6 +71,9 @@ export class ContributeView {
                 <strong>Example usage</strong> - Show it in action!
               </div>
               <div class="field-item">
+                <strong>Image</strong> - Add a picture! Use <code>=IMAGE("https://...")</code> formula or paste image URL as text
+              </div>
+              <div class="field-item">
                 <strong>Attribution</strong> - Who coined it or made it famous?
               </div>
             </div>

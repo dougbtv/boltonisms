@@ -1,5 +1,7 @@
 # Boltonisms
 
+![Boltonisms Header](public/header.png)
+
 A dictionary of insider ski/trail terms from The Old Goats / Friends of Bolton.
 
 ## Features
