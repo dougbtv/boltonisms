@@ -4,6 +4,8 @@
 
 A dictionary of insider ski/trail terms from The Old Goats / Friends of Bolton.
 
+You can view the live site @ [https://boltonisms.org/](https://boltonisms.org/)
+
 ## Features
 
 - Dictionary-style layout with Merriam-Webster vibes
