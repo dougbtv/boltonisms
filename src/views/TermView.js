@@ -1,5 +1,6 @@
 import { DefinitionRail } from '../components/DefinitionRail.js';
 import { Pills } from '../components/Pills.js';
+import { autoLinkTerms } from '../utils/formatters.js';
 
 export class TermView {
   constructor(store) {
@@ -26,7 +27,7 @@ export class TermView {
           </header>
 
           <section class="definitions-section">
-            ${DefinitionRail.render(entry.definitions)}
+            ${DefinitionRail.render(entry.definitions, slugMap, entry.slug)}
           </section>
 
           ${entry.otherForms && entry.otherForms.length > 0 ? Pills.renderOtherForms(entry.otherForms) : ''}
@@ -35,7 +36,7 @@ export class TermView {
             <section class="history-section">
               <h3>Did you know?</h3>
               <div class="history-box">
-                ${entry.history}
+                ${autoLinkTerms(entry.history, slugMap, entry.slug)}
               </div>
             </section>
           ` : ''}
@@ -44,7 +45,7 @@ export class TermView {
             <section class="examples-section">
               <h3>Examples</h3>
               <ul class="examples-list">
-                ${entry.examples.map(ex => `<li class="example">"${ex}"</li>`).join('')}
+                ${entry.examples.map(ex => `<li class="example">"${autoLinkTerms(ex, slugMap, entry.slug)}"</li>`).join('')}
               </ul>
             </section>
           ` : ''}

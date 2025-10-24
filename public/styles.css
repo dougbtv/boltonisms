@@ -425,6 +425,21 @@ body {
   border-color: var(--color-secondary);
 }
 
+/* Auto-linked terms in definitions, history, and examples */
+.term-link {
+  color: var(--color-secondary);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--color-secondary);
+  transition: all 0.2s;
+  padding-bottom: 1px;
+}
+
+.term-link:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+  border-bottom-style: solid;
+}
+
 .history-box {
   padding: 1rem;
   background: var(--color-bg-alt);
