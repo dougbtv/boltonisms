@@ -63,6 +63,8 @@ function normalizeRow(row, rowIndex, seenSlugs) {
   const examples = row[8]?.trim();
   const imageUrl = row[9]?.trim();
   const attribution = row[10]?.trim();
+  const lastEdit = row[11]?.trim();
+  const featured = row[12]?.trim();
 
   const definitions = [def1, def2, def3].filter(d => d && d.length > 0);
 
@@ -102,6 +104,22 @@ function normalizeRow(row, rowIndex, seenSlugs) {
     };
   }
   if (attribution) entry.attribution = attribution;
+  if (lastEdit) {
+    // Try to parse the lastEdit timestamp
+    try {
+      const parsedDate = new Date(lastEdit);
+      if (!isNaN(parsedDate.getTime())) {
+        entry.lastEdit = parsedDate.toISOString();
+      }
+    } catch (e) {
+      // If parsing fails, just ignore it
+    }
+  }
+  if (featured) {
+    // Parse as boolean - TRUE, true, 1, yes, etc.
+    const featuredLower = featured.toLowerCase();
+    entry.featured = featuredLower === 'true' || featuredLower === '1' || featuredLower === 'yes';
+  }
 
   entry.createdAt = now;
   entry.updatedAt = now;
@@ -224,7 +242,7 @@ async function pullSheet() {
   // First, get the cell values
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SHEET_ID,
-    range: 'A:K',
+    range: 'A:M',
   });
 
   const rows = response.data.values;
@@ -293,13 +311,22 @@ async function writeOutputs(data) {
   );
   console.log(`✓ Wrote ${OUTPUT_DIR}/boltonisms.json`);
 
-  const index = entries.map(e => ({
-    term: e.term,
-    slug: e.slug,
-    type: e.type,
-    firstDef: e.definitions[0],
-    seeAlso: e.seeAlso || []
-  }));
+  const index = entries.map(e => {
+    const indexEntry = {
+      term: e.term,
+      slug: e.slug,
+      type: e.type,
+      firstDef: e.definitions[0],
+      seeAlso: e.seeAlso || []
+    };
+    if (e.lastEdit) {
+      indexEntry.lastEdit = e.lastEdit;
+    }
+    if (e.featured) {
+      indexEntry.featured = e.featured;
+    }
+    return indexEntry;
+  });
 
   writeFileSync(
     `${OUTPUT_DIR}/index.json`,

@@ -9,6 +9,7 @@ export class HomeView {
   render() {
     const index = this.store.getIndex();
     const randomTerm = this.getRandomTerm(index);
+    const latest = this.getLatestTerms(index, 2);
     const featured = this.getFeaturedTerms(index, 6);
 
     return `
@@ -26,6 +27,13 @@ export class HomeView {
             </div>
           ` : ''}
         </div>
+
+        ${latest.length > 0 ? `
+          <section class="latest-section">
+            <h2>Latest Entries</h2>
+            ${TermCard.renderList(latest)}
+          </section>
+        ` : ''}
 
         <section class="featured-section">
           <h2>Featured Terms</h2>
@@ -83,11 +91,60 @@ export class HomeView {
     return terms[Math.floor(Math.random() * terms.length)];
   }
 
+  getLatestTerms(terms, count) {
+    if (!terms || terms.length === 0) return [];
+
+    // Filter to only terms with lastEdit and sort by most recent
+    const withEdits = terms.filter(t => t.lastEdit);
+
+    if (withEdits.length === 0) return [];
+
+    const sorted = [...withEdits].sort((a, b) => {
+      return new Date(b.lastEdit) - new Date(a.lastEdit);
+    });
+
+    return sorted.slice(0, count);
+  }
+
   getFeaturedTerms(terms, count) {
     if (!terms || terms.length === 0) return [];
 
-    const shuffled = [...terms].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, count);
+    // First, check if any terms are explicitly marked as featured
+    const explicitlyFeatured = terms.filter(t => t.featured === true);
+
+    if (explicitlyFeatured.length > 0) {
+      // If we have explicitly featured terms, use those
+      // Shuffle them for variety and take up to count
+      const shuffled = [...explicitlyFeatured].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, count);
+    }
+
+    // Fallback: No explicitly featured terms, use old logic
+    // Separate terms with and without lastEdit
+    const withEdits = terms.filter(t => t.lastEdit);
+    const withoutEdits = terms.filter(t => !t.lastEdit);
+
+    // Prioritize recently edited (50% chance), then random from all
+    const featured = [];
+
+    // First, try to get some recent ones (up to half)
+    if (withEdits.length > 0) {
+      const recentCount = Math.min(Math.ceil(count / 2), withEdits.length);
+      const sorted = [...withEdits].sort((a, b) => {
+        return new Date(b.lastEdit) - new Date(a.lastEdit);
+      });
+      featured.push(...sorted.slice(0, recentCount));
+    }
+
+    // Fill the rest with random terms
+    const remaining = count - featured.length;
+    if (remaining > 0) {
+      const pool = [...withoutEdits, ...withEdits.filter(t => !featured.includes(t))];
+      const shuffled = pool.sort(() => Math.random() - 0.5);
+      featured.push(...shuffled.slice(0, remaining));
+    }
+
+    return featured;
   }
 
   attachEvents() {
