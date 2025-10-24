@@ -94,8 +94,8 @@ export class HomeView {
   getLatestTerms(terms, count) {
     if (!terms || terms.length === 0) return [];
 
-    // Filter to only terms with lastEdit and sort by most recent
-    const withEdits = terms.filter(t => t.lastEdit);
+    // Filter to only terms with lastEdit, excluding featured terms
+    const withEdits = terms.filter(t => t.lastEdit && !t.featured);
 
     if (withEdits.length === 0) return [];
 
