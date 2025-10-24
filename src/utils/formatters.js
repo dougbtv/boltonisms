@@ -48,7 +48,11 @@ export function groupByLetter(items, keyFn) {
     .sort()
     .map(letter => ({
       letter,
-      items: groups[letter]
+      items: groups[letter].sort((a, b) => {
+        const keyA = keyFn(a).toLowerCase();
+        const keyB = keyFn(b).toLowerCase();
+        return keyA.localeCompare(keyB);
+      })
     }));
 }
 
